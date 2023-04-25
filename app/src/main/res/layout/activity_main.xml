@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.beta.MainActivity">
+
+    <EditText
+        android:id="@+id/edit_text_ten_kho"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên kho" />
+
+    <EditText
+        android:id="@+id/edit_text_dia_chi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_ten_kho"
+        android:hint="Địa chỉ" />
+
+    <EditText
+        android:id="@+id/edit_text_ma_kho"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_dia_chi"
+        android:hint="Mã kho" />
+
+
+    <EditText
+        android:id="@+id/edit_text_tai_trong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_ma_kho"
+        android:hint="Tải trọng" />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_tai_trong"
+        android:layout_centerHorizontal="true"
+        android:text="Thêm" />
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/button_add"
+        android:layout_above="@+id/button_delete"
+        android:choiceMode="multipleChoice" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Xóa" />
+
+    <Button
+        android:id="@+id/button_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Thống kê" />
+
+</RelativeLayout>
