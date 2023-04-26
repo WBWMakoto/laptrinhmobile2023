@@ -1,10 +1,13 @@
 package com.example.beta;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,11 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private Context appContext;
     private DatabaseHelper databaseHelper;
     private ListView listView;
     private KhoAdapter khoAdapter;
     private Button addButton;
+
+
+
+
+
 
     private Button buttonDelete;
 
@@ -27,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        appContext = getApplicationContext();
+
 
         // initialize the database helper
         databaseHelper = new DatabaseHelper(this);
@@ -36,9 +48,19 @@ public class MainActivity extends AppCompatActivity {
         khoAdapter = new KhoAdapter(this, R.layout.activity_kho_adapter, databaseHelper.getAllKho());
         listView.setAdapter(khoAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Toggle the selection state of the CheckBox for the clicked item
+                Kho kho = khoAdapter.getItem(position);
+                kho.setSelected(!kho.isSelected());
+
+                // Update the view for the clicked item
+                khoAdapter.notifyDataSetChanged();
+            }
+        });
+
         // find the buttons in the layout and set up click listeners
-
-
         Button thongKeButton = findViewById(R.id.button_statistics);
         thongKeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,47 +75,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         buttonDelete = findViewById(R.id.button_delete);
+
+
+
         buttonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
-                if (checkedPositions != null) {
-                    // Create a list to store the Kho objects to delete
-                    List<Kho> khoToDelete = new ArrayList<>();
-
-                    // Loop through the checked items in reverse order to avoid index issues
-                    for (int i = checkedPositions.size() - 1; i >= 0; i--) {
-                        int position = checkedPositions.keyAt(i);
-
-                        // Check if the item at the current position is checked
-                        if (checkedPositions.valueAt(i)) {
-                            // Get the Kho object at the current position
-                            Kho kho = (Kho) listView.getItemAtPosition(position);
-
-                            // Add the Kho object to the list of items to delete
-                            khoToDelete.add(kho);
-                        }
+// Create a list of selected Kho objects
+                List<Kho> selectedKhoList = new ArrayList<>();
+                for (int i = 0; i < khoAdapter.getCount(); i++) {
+                    Kho kho = khoAdapter.getItem(i);
+                    if (kho.isSelected()) {
+                        selectedKhoList.add(kho);
                     }
-
-                    // Delete the Kho objects from the database using the databaseHelper object
-                    databaseHelper.deleteKhoList(khoToDelete);
-
-                    // Remove the Kho objects from the adapter
-                    khoAdapter.removeAll(khoToDelete);
-
-                    // Clear the checked items in the ListView
-                    listView.clearChoices();
-
-                    // Notify the adapter that the data set has changed
-                    khoAdapter.notifyDataSetChanged();
                 }
+                // Remove the selected Kho objects from the database
+                DatabaseHelper dbHelper = new DatabaseHelper(appContext);
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                for (Kho kho : selectedKhoList) {
+                    db.delete("Kho", "MaKho = ?", new String[]{String.valueOf(kho.getMaKho())});
+                }
+                db.close();
+
+                // Remove the selected Kho objects from the adapter
+                khoAdapter.removeAll(selectedKhoList);
             }
         });
 
-
-
-
-        // find the "Add" button in the layout and set up a click listener
+            // find the "Add" button in the layout and set up a click listener
         addButton = findViewById(R.id.button_add);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override

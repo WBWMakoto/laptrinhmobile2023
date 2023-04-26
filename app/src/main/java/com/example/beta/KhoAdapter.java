@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class KhoAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Kho> mListKho;
     private int mLayoutResId;
-
+    private boolean isDeleting = false;
     public KhoAdapter(Context context, int layoutResId, ArrayList<Kho> listKho) {
         this.mContext = context;
         this.mListKho = listKho;
@@ -66,6 +67,26 @@ public class KhoAdapter extends BaseAdapter {
             float taiTrong = kho.getTaiTrong();
             holder.tvTaiTrong.setText(String.format("Tải trọng: %.2f", taiTrong));
         }
+
+        // Set the checkbox state and listener
+        holder.cbSelected.setChecked(kho.isSelected());
+        holder.cbSelected.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // Get the clicked item
+                Kho kho = mListKho.get(position);
+
+                // Update the selected state of the item
+                kho.setSelected(isChecked);
+
+                if (isChecked && isDeleting) {
+                    // Delete the item from the list
+                    mListKho.remove(kho);
+                    notifyDataSetChanged();
+                }
+            }
+        });
+
 
         return view;
     }

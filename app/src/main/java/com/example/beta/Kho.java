@@ -8,14 +8,14 @@ public class Kho implements Parcelable {
     private String tenKho;
     private String diaChi;
     private float taiTrong;
-    private boolean isChecked;
+    private boolean isSelected;
 
     public Kho(String maKho, String tenKho, String diaChi, float taiTrong, boolean isChecked) {
         this.maKho = maKho;
         this.tenKho = tenKho;
         this.diaChi = diaChi;
         this.taiTrong = taiTrong;
-        this.isChecked = isChecked;
+        this.isSelected = false;
     }
 
     public Kho() {}
@@ -40,8 +40,12 @@ public class Kho implements Parcelable {
         return diaChi;
     }
 
-    public boolean isChecked() {
-        return isChecked;
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public void setDiaChi(String diaChi) {
@@ -67,7 +71,7 @@ public class Kho implements Parcelable {
         dest.writeString(tenKho);
         dest.writeString(diaChi);
         dest.writeFloat(taiTrong);
-        dest.writeByte((byte) (isChecked ? 1 : 0));
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 
     protected Kho(Parcel in) {
@@ -75,7 +79,7 @@ public class Kho implements Parcelable {
         tenKho = in.readString();
         diaChi = in.readString();
         taiTrong = in.readFloat();
-        isChecked = in.readByte() != 0;
+        isSelected = in.readByte() != 0;
     }
 
     public static final Creator<Kho> CREATOR = new Creator<Kho>() {
