@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 Kho kho = new Kho(maKho, tenKho, diaChi, taiTrong, false);
                 databaseHelper.addKho(kho);
                 khoAdapter.add(kho);
+                khoAdapter.notifyDataSetChanged();
 
                 // clear the EditText fields
                 tenKhoEditText.setText("");

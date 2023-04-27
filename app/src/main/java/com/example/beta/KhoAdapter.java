@@ -104,7 +104,9 @@ public class KhoAdapter extends BaseAdapter {
     }
 
     public void add(Kho kho) {
+
         mListKho.add(kho);
+        notifyDataSetChanged();
     }
 
     public void remove(Kho kho) {
